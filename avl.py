@@ -1,15 +1,12 @@
 # Name: Jaskaran Singh Sidhu
-# OSU Email: sidhuja@oregonstate.edu
+# OSU Email: jaskaran.sidhu@oregonstate.edu
 # Course: CS261 - Data Structures
 # Assignment: A4 - BST and AVL Tree Implementation
 # Due Date: November 17, 2024
 # Description: This file contains the implementation of the AVL tree, a self-balancing
-#              binary search tree. The AVL class extends the BST class, adding methods
-#              to maintain the AVL property (balance factor of -1, 0, or 1) after
-#              additions and deletions. Rotations (left and right) and rebalancing
-#              operations are implemented to ensure height balance.
+#              binary search tree with methods for insertion, deletion, and balancing.
 
-from bst import BSTNode, BST
+from bst import BST, BSTNode
 
 
 class AVLNode(BSTNode):
@@ -20,7 +17,6 @@ class AVLNode(BSTNode):
 
 class AVL(BST):
     def add(self, value: object) -> None:
-        """Add a value to the AVL tree."""
         self._root = self._add_helper(self._root, value)
 
     def _add_helper(self, node: AVLNode, value: object) -> AVLNode:
@@ -30,17 +26,18 @@ class AVL(BST):
             node.left = self._add_helper(node.left, value)
         else:
             node.right = self._add_helper(node.right, value)
+
         node.height = 1 + max(self._get_height(node.left), self._get_height(node.right))
         return self._rebalance(node)
 
     def _rebalance(self, node: AVLNode) -> AVLNode:
         balance = self._balance_factor(node)
-        if balance > 1:  # Left heavy
-            if self._balance_factor(node.left) < 0:  # Left-Right case
+        if balance > 1:
+            if self._balance_factor(node.left) < 0:
                 node.left = self._rotate_left(node.left)
             return self._rotate_right(node)
-        if balance < -1:  # Right heavy
-            if self._balance_factor(node.right) > 0:  # Right-Left case
+        if balance < -1:
+            if self._balance_factor(node.right) > 0:
                 node.right = self._rotate_right(node.right)
             return self._rotate_left(node)
         return node
