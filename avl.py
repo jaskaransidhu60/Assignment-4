@@ -4,7 +4,7 @@
 # Assignment: A4 - BST and AVL Tree Implementation
 # Due Date: November 17, 2024
 # Description: AVL tree implementation with self-balancing functionality.
-#              Includes corrected methods for add() and remove().
+#              Includes corrected methods for add() and remove() to pass all tests.
 
 from bst import BST, BSTNode
 
@@ -33,7 +33,7 @@ class AVL(BST):
             node.right = self._add_helper(node.right, value, node)
 
         # Update height and rebalance
-        node.height = 1 + max(self._get_height(node.left), self._get_height(node.right))
+        self._update_height(node)
         return self._rebalance(node)
 
     def remove(self, value: object) -> bool:
@@ -66,7 +66,7 @@ class AVL(BST):
             node.right, _ = self._remove_helper(node.right, min_larger_node.value)
 
         # Update height and rebalance
-        node.height = 1 + max(self._get_height(node.left), self._get_height(node.right))
+        self._update_height(node)
         return self._rebalance(node), removed
 
     def _rebalance(self, node: AVLNode) -> AVLNode:
@@ -94,8 +94,8 @@ class AVL(BST):
         y.parent = z.parent  # Update parent pointer
         z.parent = y  # Update parent pointer
 
-        z.height = 1 + max(self._get_height(z.left), self._get_height(z.right))
-        y.height = 1 + max(self._get_height(y.left), self._get_height(y.right))
+        self._update_height(z)
+        self._update_height(y)
         return y
 
     def _rotate_right(self, z: AVLNode) -> AVLNode:
@@ -107,17 +107,25 @@ class AVL(BST):
         y.parent = z.parent  # Update parent pointer
         z.parent = y  # Update parent pointer
 
-        z.height = 1 + max(self._get_height(z.left), self._get_height(z.right))
-        y.height = 1 + max(self._get_height(y.left), self._get_height(y.right))
+        self._update_height(z)
+        self._update_height(y)
         return y
 
+    def _update_height(self, node: AVLNode) -> None:
+        """Updates the height of a node based on its children."""
+        if node:
+            node.height = 1 + max(self._get_height(node.left), self._get_height(node.right))
+
     def _balance_factor(self, node: AVLNode) -> int:
+        """Calculates the balance factor of a node."""
         return self._get_height(node.left) - self._get_height(node.right)
 
     def _get_height(self, node: AVLNode) -> int:
+        """Returns the height of a node or 0 if the node is None."""
         return node.height if node else 0
 
     def _find_min(self, node: AVLNode) -> AVLNode:
+        """Finds the node with the minimum value in the tree."""
         current = node
         while current.left:
             current = current.left
