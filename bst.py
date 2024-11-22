@@ -1,5 +1,5 @@
 # Name: Jaskaran Singh Sidhu
-# OSU Email: jaskaran.sidhu@oregonstate.edu
+# OSU Email: sidhuja@oregonstate.edu
 # Course: CS261 - Data Structures
 # Assignment: A4 - BST and AVL Tree Implementation
 # Due Date: November 17, 2024
