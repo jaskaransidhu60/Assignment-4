@@ -1,16 +1,13 @@
 # Name: Jaskaran Singh Sidhu
-# OSU Email: sidhuja@oregonstate.edu
+# OSU Email: jaskaran.sidhu@oregonstate.edu
 # Course: CS261 - Data Structures
 # Assignment: A4 - BST and AVL Tree Implementation
 # Due Date: November 17, 2024
 # Description: This file contains the implementation of the Binary Search Tree (BST).
-#              The BST class provides methods to add, remove, search, and traverse
-#              nodes in a binary search tree. Additional methods include finding
-#              the minimum and maximum values, checking if the tree is empty, and 
-#              clearing the tree. The BSTNode class represents individual nodes in
-#              the tree. This file also includes helper methods for tree management.
+#              Includes methods for adding, removing, searching, traversing, and clearing
+#              the tree. The class ensures correct structure and handling of nodes.
 
-from queue_and_stack import Queue, Stack
+from queue_and_stack import Queue
 
 
 class BSTNode:
@@ -27,8 +24,11 @@ class BST:
             for value in start_tree:
                 self.add(value)
 
+    def get_root(self) -> BSTNode:
+        """Return the root of the tree."""
+        return self._root
+
     def add(self, value: object) -> None:
-        """Add a value to the BST."""
         if self._root is None:
             self._root = BSTNode(value)
         else:
@@ -47,7 +47,6 @@ class BST:
                 self._add_helper(node.right, value)
 
     def contains(self, value: object) -> bool:
-        """Check if the BST contains a value."""
         return self._contains_helper(self._root, value)
 
     def _contains_helper(self, node: BSTNode, value: object) -> bool:
@@ -59,8 +58,30 @@ class BST:
             return self._contains_helper(node.left, value)
         return self._contains_helper(node.right, value)
 
+    def remove(self, value: object) -> bool:
+        """Remove a value from the tree."""
+        self._root, removed = self._remove_helper(self._root, value)
+        return removed
+
+    def _remove_helper(self, node: BSTNode, value: object) -> (BSTNode, bool):
+        if node is None:
+            return None, False
+        if value < node.value:
+            node.left, removed = self._remove_helper(node.left, value)
+        elif value > node.value:
+            node.right, removed = self._remove_helper(node.right, value)
+        else:
+            if not node.left:
+                return node.right, True
+            if not node.right:
+                return node.left, True
+            min_larger_node = self._find_min(node.right)
+            node.value = min_larger_node.value
+            node.right, _ = self._remove_helper(node.right, node.value)
+            return node, True
+        return node, removed
+
     def inorder_traversal(self) -> Queue:
-        """Return an inorder traversal as a Queue."""
         result = Queue()
         self._inorder_helper(self._root, result)
         return result
@@ -71,17 +92,18 @@ class BST:
             result.enqueue(node.value)
             self._inorder_helper(node.right, result)
 
-    def find_min(self) -> object:
-        """Return the minimum value in the BST."""
-        if self._root is None:
-            return None
-        current = self._root
+    def _find_min(self, node: BSTNode) -> BSTNode:
+        current = node
         while current.left:
             current = current.left
-        return current.value
+        return current
+
+    def find_min(self) -> object:
+        if self._root is None:
+            return None
+        return self._find_min(self._root).value
 
     def find_max(self) -> object:
-        """Return the maximum value in the BST."""
         if self._root is None:
             return None
         current = self._root
@@ -90,9 +112,7 @@ class BST:
         return current.value
 
     def is_empty(self) -> bool:
-        """Check if the BST is empty."""
         return self._root is None
 
     def make_empty(self) -> None:
-        """Clear the BST."""
         self._root = None
