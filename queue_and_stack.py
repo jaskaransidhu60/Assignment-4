@@ -1,17 +1,13 @@
 # Name: Jaskaran Singh Sidhu
-# OSU Email: sidhuja@oregonstate.edu
+# OSU Email: jaskaran.sidhu@oregonstate.edu
 # Course: CS261 - Data Structures
 # Assignment: A4 - BST and AVL Tree Implementation
 # Due Date: November 17, 2024
 # Description: This file contains the implementations of the Queue and Stack
 #              abstract data types (ADTs). These helper classes are used in 
-#              the implementation of the BST and AVL trees. The Queue supports
-#              enqueue, dequeue, and is_empty operations, while the Stack supports
-#              push, pop, top, and is_empty operations. Both are essential for
-#              traversal and management of tree nodes.
+#              the implementation of the BST and AVL trees.
 
 class Queue:
-    """Class implementing QUEUE ADT. Supported methods are: enqueue, dequeue, is_empty"""
     def __init__(self):
         self._data = []
 
@@ -30,7 +26,6 @@ class Queue:
 
 
 class Stack:
-    """Class implementing STACK ADT. Supported methods are: push, pop, top, is_empty"""
     def __init__(self):
         self._data = []
 
